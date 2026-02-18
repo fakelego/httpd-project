@@ -1,0 +1,18 @@
+# 编译产物
+*.o
+*.out
+httpd
+*.exe
+
+# 备份文件
+*.backup
+*.bak
+*~
+
+# 调试文件
+*.log
+*.dSYM/
+
+# IDE 文件
+.vscode/
+.idea/

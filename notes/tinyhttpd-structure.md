@@ -1,7 +1,9 @@
 # Tinyhttpd 源码结构分析
 
 ## 目录结构
+```
 Tinyhttpd/ ├── httpd.c # 主程序（约 600 行） ├── Makefile # 构建文件 ├── htdocs/ # 网站根目录 │ ├── index.html # 首页 │ ├── color.cgi # CGI 示例 │ └── ... └── README.md # 说明文档
+```
 
 ## 主要文件
 - httpd.c: 所有代码都在一个文件中

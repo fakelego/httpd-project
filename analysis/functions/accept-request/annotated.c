@@ -48,11 +48,42 @@ void accept_request(void *arg)
      * 用于后续的 recv/send 操作
      */
     char buf[1024];
+    /* 临时缓冲区，用于：
+     * 1. 读取 HTTP 请求行
+     * 2. 读取请求头
+     * 3. 构建响应
+     * 问题：如果请求行超过 1024 字节会溢出
+     * 改进：使用 SDS 动态扩展
+     */
     size_t numchars;
+    /* 读取的字符数
+     * 用于判断是否读取完毕
+     */
     char method[255];
+    /* HTTP 方法（GET、POST 等）
+     * 问题：255 字节对方法名来说太大（浪费）
+     * 改进：使用 SDS，只分配实际需要的空间
+     */
     char url[255];
+    /* 请求的 URL 路径
+     * 例如："/index.html" 或 "/color.cgi?color=red"
+     * 问题：URL 可能超过 255 字节（尤其带长查询字符串）
+     * 改进：使用 SDS 动态扩展
+     */
     char path[512];
+    /* 文件系统中的实际路径
+     * 格式："htdocs" + url
+     * 例如："htdocs/index.html"
+     * 问题：路径可能超过 512 字节
+     * 改进：使用 SDS
+     */
     size_t i, j;
+    /* 字符串处理的索引变量
+     * i: 通常用于 method/url/path 的索引
+     * j: 通常用于 buf 的索引
+     */
+
+    // === 文件状态 ===
     struct stat st;
     int cgi = 0;      /* becomes true if server decides this is a CGI
                        * program */
